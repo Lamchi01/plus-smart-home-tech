@@ -53,20 +53,25 @@ public class EventMapper {
         Object payload;
 
         switch (hubEvent) {
-            case DeviceAddedEvent event -> payload = DeviceAddedEventAvro.newBuilder()
+            case DeviceAddedEvent event ->
+                    payload = DeviceAddedEventAvro.newBuilder()
+                    .setId(event.getId())
                     .setDeviceType(DeviceTypeAvro.valueOf(event.getDeviceType().name()))
                     .build();
 
-            case DeviceRemovedEvent event -> payload = DeviceRemovedEventAvro.newBuilder()
+            case DeviceRemovedEvent event ->
+                    payload = DeviceRemovedEventAvro.newBuilder()
                     .setId(event.getId())
                     .build();
 
-            case ScenarioAddedEvent event -> payload = ScenarioAddedEventAvro.newBuilder()
+            case ScenarioAddedEvent event ->
+                    payload = ScenarioAddedEventAvro.newBuilder()
                     .setActions(toDeviceActionAvro(event.getActions()))
                     .setConditions(toScenarioConditionAvro(event.getConditions()))
                     .build();
 
-            case ScenarioRemovedEvent event -> payload = ScenarioRemovedEventAvro.newBuilder()
+            case ScenarioRemovedEvent event ->
+                    payload = ScenarioRemovedEventAvro.newBuilder()
                     .setName(event.getName())
                     .build();
 
