@@ -23,13 +23,10 @@ import java.time.Instant;
         @JsonSubTypes.Type(value = ScenarioAddedEvent.class, name = "SCENARIO_ADDED"),
         @JsonSubTypes.Type(value = ScenarioRemovedEvent.class, name = "SCENARIO_REMOVED")
 })
-@Getter
-@Setter
-@ToString
+@Getter @Setter @ToString
 public abstract class HubEvent {
     @NotBlank
     private String hubId;
-    @NotNull
     private Instant timestamp = Instant.now();
 
     @NotNull
