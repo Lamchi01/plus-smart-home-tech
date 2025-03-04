@@ -34,6 +34,10 @@ public class EventMapper {
                     .setCo2Level(event.getCo2Level())
                     .build();
 
+            case SwitchSensor event -> payload = SwitchSensorAvro.newBuilder()
+                    .setState(event.isState())
+                    .build();
+
             default -> throw new IllegalStateException("Unexpected value: " + sensorEvent);
         }
         return SensorEventAvro.newBuilder()

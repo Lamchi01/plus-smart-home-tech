@@ -1,6 +1,6 @@
 package ru.yandex.practicum.model.hub.enums;
 
-public enum EventType {
+public enum HubEventType {
     DEVICE_ADDED,
     DEVICE_REMOVED,
     SCENARIO_ADDED,

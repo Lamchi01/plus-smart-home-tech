@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.yandex.practicum.model.sensors.enums.SensorType;
+import ru.yandex.practicum.model.sensors.enums.SensorEventType;
 
 @Getter
 @Setter
@@ -17,7 +17,8 @@ public class MotionSensor extends SensorEvent {
     @NotNull
     private int voltage;
 
-    public SensorType getType() {
-        return SensorType.MOTION_SENSOR_EVENT;
+    @Override
+    public SensorEventType getType() {
+        return SensorEventType.MOTION_SENSOR_EVENT;
     }
 }

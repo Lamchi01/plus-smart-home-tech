@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.yandex.practicum.model.hub.enums.EventType;
+import ru.yandex.practicum.model.hub.enums.HubEventType;
 
 import java.util.List;
 
@@ -25,7 +25,8 @@ public class ScenarioAddedEvent extends HubEvent {
     @NotEmpty
     private List<DeviceAction> actions;
 
-    public EventType getType() {
-        return EventType.SCENARIO_ADDED;
+    @Override
+    public HubEventType getType() {
+        return HubEventType.SCENARIO_ADDED;
     }
 }

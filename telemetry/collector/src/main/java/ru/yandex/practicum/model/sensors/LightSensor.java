@@ -3,7 +3,7 @@ package ru.yandex.practicum.model.sensors;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.yandex.practicum.model.sensors.enums.SensorType;
+import ru.yandex.practicum.model.sensors.enums.SensorEventType;
 
 @Getter
 @Setter
@@ -13,7 +13,7 @@ public class LightSensor extends SensorEvent {
     private int luminosity;
 
     @Override
-    public SensorType getType() {
-        return SensorType.LIGHT_SENSOR_EVENT;
+    public SensorEventType getType() {
+        return SensorEventType.LIGHT_SENSOR_EVENT;
     }
 }

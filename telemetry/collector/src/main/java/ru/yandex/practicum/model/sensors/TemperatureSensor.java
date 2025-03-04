@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.yandex.practicum.model.sensors.enums.SensorType;
+import ru.yandex.practicum.model.sensors.enums.SensorEventType;
 
 @Getter
 @Setter
@@ -15,7 +15,8 @@ public class TemperatureSensor extends SensorEvent {
     @NotNull
     private int temperatureF;
 
-    public SensorType getType() {
-        return SensorType.TEMPERATURE_SENSOR_EVENT;
+    @Override
+    public SensorEventType getType() {
+        return SensorEventType.TEMPERATURE_SENSOR_EVENT;
     }
 }

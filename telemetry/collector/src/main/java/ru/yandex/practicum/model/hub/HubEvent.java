@@ -3,11 +3,10 @@ package ru.yandex.practicum.model.hub;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.yandex.practicum.model.hub.enums.EventType;
+import ru.yandex.practicum.model.hub.enums.HubEventType;
 
 import java.time.Instant;
 
@@ -15,7 +14,7 @@ import java.time.Instant;
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.EXISTING_PROPERTY,
         property = "type",
-        defaultImpl = EventType.class
+        defaultImpl = HubEventType.class
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = DeviceAddedEvent.class, name = "DEVICE_ADDED"),
@@ -29,6 +28,5 @@ public abstract class HubEvent {
     private String hubId;
     private Instant timestamp = Instant.now();
 
-    @NotNull
-    public abstract EventType getType();
+    public abstract HubEventType getType();
 }

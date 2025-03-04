@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.yandex.practicum.model.hub.enums.EventType;
+import ru.yandex.practicum.model.hub.enums.HubEventType;
 
 @Getter
 @Setter
@@ -15,7 +15,8 @@ public class ScenarioRemovedEvent extends HubEvent {
     @Size(min = 3, message = "Название должно содержать не меньше 3 символов")
     private String name;
 
-    public EventType getType() {
-        return EventType.SCENARIO_REMOVED;
+    @Override
+    public HubEventType getType() {
+        return HubEventType.SCENARIO_REMOVED;
     }
 }

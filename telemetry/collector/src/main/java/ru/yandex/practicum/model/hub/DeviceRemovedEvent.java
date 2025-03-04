@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.yandex.practicum.model.hub.enums.EventType;
+import ru.yandex.practicum.model.hub.enums.HubEventType;
 
 @Getter
 @Setter
@@ -13,7 +13,8 @@ public class DeviceRemovedEvent extends HubEvent {
     @NotBlank
     private String id;
 
-    public EventType getType() {
-        return EventType.DEVICE_REMOVED;
+    @Override
+    public HubEventType getType() {
+        return HubEventType.DEVICE_REMOVED;
     }
 }

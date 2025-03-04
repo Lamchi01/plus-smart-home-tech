@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.yandex.practicum.model.sensors.enums.SensorType;
+import ru.yandex.practicum.model.sensors.enums.SensorEventType;
 
 @Getter
 @Setter
@@ -13,7 +13,8 @@ public class SwitchSensor extends SensorEvent {
     @NotNull
     private boolean state;
 
-    public SensorType getType() {
-        return SensorType.SWITCH_SENSOR_EVENT;
+    @Override
+    public SensorEventType getType() {
+        return SensorEventType.SWITCH_SENSOR_EVENT;
     }
 }
