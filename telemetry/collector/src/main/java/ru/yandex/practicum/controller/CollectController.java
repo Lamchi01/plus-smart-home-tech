@@ -3,6 +3,7 @@ package ru.yandex.practicum.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import ru.yandex.practicum.model.hub.HubEvent;
 import ru.yandex.practicum.model.sensors.SensorEvent;
@@ -19,14 +20,15 @@ import ru.yandex.practicum.service.EventService;
 @Validated
 public class CollectController {
     private final EventService eventService;
-
-    private static final String SENSOR_TOPIC = "telemetry.sensors.v1";
-    private static final String HUB_TOPIC = "telemetry.hubs.v1";
+    @Value("${kafka.topics.hubs-events}")
+    private String HUB_TOPIC;
+    @Value("${kafka.topics.sensors-events}")
+    private String SENSORS_TOPIC;
 
     @PostMapping("/sensors")
     public void collectSensorEvent(@Valid @RequestBody SensorEvent sensorEvent) {
         log.info("Запрос на добавление события датчика {}", sensorEvent);
-        eventService.collectSensorEvent(sensorEvent, SENSOR_TOPIC);
+        eventService.collectSensorEvent(sensorEvent, SENSORS_TOPIC);
         log.info("Событие датчика {} добавлено успешно", sensorEvent);
     }
 

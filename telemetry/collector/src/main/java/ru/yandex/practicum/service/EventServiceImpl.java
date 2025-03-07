@@ -1,5 +1,7 @@
 package ru.yandex.practicum.service;
 
+import jakarta.annotation.PreDestroy;
+import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.kafka_client.KafkaClient;
 import lombok.RequiredArgsConstructor;
 import ru.yandex.practicum.mapper.EventMapper;
@@ -8,6 +10,7 @@ import ru.yandex.practicum.model.sensors.SensorEvent;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
@@ -33,5 +36,16 @@ public class EventServiceImpl implements EventService {
                 sensorEvent.getHubId(),
                 EventMapper.toSensorEventAvro(sensorEvent)
         ));
+    }
+
+    @PreDestroy
+    public void destroy() {
+        try {
+            kafkaClient.getProducer().flush();
+            log.info("Выполнена команда flush() в Producer");
+        } finally {
+            kafkaClient.getProducer().close();
+            log.info("Выполнена команда close() в Producer");
+        }
     }
 }
