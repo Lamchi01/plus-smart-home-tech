@@ -13,7 +13,7 @@ import java.util.Properties;
 public class ClientKafkaConfiguration {
 
     @Bean
-    @ConfigurationProperties(prefix = "kafka.producer.configuration")
+    @ConfigurationProperties(prefix = "kafka.producer.properties")
     public Properties kafkaProducerConfiguration() {
         return new Properties();
     }
