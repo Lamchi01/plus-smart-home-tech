@@ -2,7 +2,7 @@ package ru.yandex.practicum.handler.sensor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.grpc.telemetry.event.MotionSensorProto;
+import ru.yandex.practicum.grpc.telemetry.event.MotionSensorEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.MotionSensorAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
@@ -26,7 +26,7 @@ public class MotionSensorEventHandler implements SensorEventHandler {
     }
 
     private SensorEventAvro toSensorEventAvro(SensorEventProto sensorEvent) {
-        MotionSensorProto motionProto = sensorEvent.getMotionSensorEvent();
+        MotionSensorEventProto motionProto = sensorEvent.getMotionSensorEvent();
         MotionSensorAvro motionAvro = MotionSensorAvro.newBuilder()
                 .setLinkQuality(motionProto.getLinkQuality())
                 .setMotion(motionProto.getMotion())

@@ -7,14 +7,36 @@ import "google/protobuf/timestamp.proto";
 option java_multiple_files = true;
 option java_package = "ru.yandex.practicum.grpc.telemetry.event";
 
-enum DeviceTypeProto {
-  MOTION_SENSOR = 0;
-  LIGHT_SENSOR = 1;
-  TEMPERATURE_SENSOR = 2;
-  CLIMATE_SENSOR = 3;
-  SWITCH_SENSOR = 4;
+message HubEventProto {
+  string hub_id = 1; // идентификатор хаба
+  google.protobuf.Timestamp timestamp = 2; // таймстемп события
+  oneof payload {// содержимое конкретного события
+    DeviceAddedEventProto device_added = 3;      // данные события добавления устройства
+    DeviceRemovedEventProto device_removed = 4;  // данные события удаления устройства
+    ScenarioAddedEventProto scenario_added = 5;      // данные события добавления нового сценария
+    ScenarioRemovedEventProto scenario_removed = 6;  // данные события удаления сценария
+  }
 }
 
+// события (де)регистрации устройств
+enum DeviceTypeProto {
+  MOTION_SENSOR = 0;      // датчик движения
+  TEMPERATURE_SENSOR = 1; // датчик температуры
+  LIGHT_SENSOR = 2;       // датчик освещённости
+  CLIMATE_SENSOR = 3;     // датчик контроля климата
+  SWITCH_SENSOR = 4;      // переключатель
+}
+
+message DeviceAddedEventProto {
+  string id = 1;        // идентификатор устройства
+  DeviceTypeProto type = 2; // тип устройства
+}
+
+message DeviceRemovedEventProto {
+  string id = 1;        // идентификатор устройства
+}
+
+// события создания/удаления сценариев
 enum ConditionTypeProto {
   MOTION = 0;
   LUMINOSITY = 1;
@@ -25,25 +47,9 @@ enum ConditionTypeProto {
 }
 
 enum ConditionOperationProto {
-  EQUAL = 0;
+  EQUALS = 0;
   GREATER_THAN = 1;
   LOWER_THAN = 2;
-}
-
-enum ActionTypeProto {
-  ACTIVATE = 0;
-  DEACTIVATE = 1;
-  INVERSE = 2;
-  SET_VALUE = 3;
-}
-
-message DeviceAddedEventProto {
-  string id = 1;
-  DeviceTypeProto device_type = 2;
-}
-
-message DeviceRemovedEventProto {
-  string id = 1;
 }
 
 message ScenarioConditionProto {
@@ -56,29 +62,25 @@ message ScenarioConditionProto {
   }
 }
 
+enum ActionTypeProto {
+  ACTIVATE = 0;
+  DEACTIVATE = 1;
+  INVERSE = 2;
+  SET_VALUE = 3;
+}
+
 message DeviceActionProto {
-  string sensor_id = 1;
+  string sensor_id = 1; // идентификатор устройства
   ActionTypeProto type = 2;
   optional int32 value = 3;
 }
 
 message ScenarioAddedEventProto {
-  string name = 1;
-  repeated ScenarioConditionProto conditions = 2;
-  repeated DeviceActionProto actions = 3;
+  string name = 1; // название сценария, уникальное в рамках хаба
+  repeated ScenarioConditionProto condition = 2; // набор условий активации сценария
+  repeated DeviceActionProto action = 3; // набор действий при активации сценария
 }
 
 message ScenarioRemovedEventProto {
-  string name = 1;
-}
-
-message HubEventProto {
-  string hub_id = 1;
-  google.protobuf.Timestamp timestamp = 2;
-  oneof payload {
-    DeviceAddedEventProto device_added = 3;
-    DeviceRemovedEventProto device_removed = 4;
-    ScenarioAddedEventProto scenario_added = 5;
-    ScenarioRemovedEventProto scenario_removed = 6;
-  }
+  string name = 1; // название сценария, уникальное в рамках хаба
 }

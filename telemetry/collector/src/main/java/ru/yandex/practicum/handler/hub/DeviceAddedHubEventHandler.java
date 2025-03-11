@@ -30,7 +30,7 @@ public class DeviceAddedHubEventHandler implements HubEventHandler {
         DeviceAddedEventProto deviceProto = hubEvent.getDeviceAdded();
         DeviceAddedEventAvro deviceAvro = DeviceAddedEventAvro.newBuilder()
                 .setId(deviceProto.getId())
-                .setDeviceType(DeviceTypeAvro.valueOf(deviceProto.getDeviceType().name()))
+                .setDeviceType(DeviceTypeAvro.valueOf(deviceProto.getType().name()))
                 .build();
 
         return HubEventAvro.newBuilder()

@@ -2,7 +2,7 @@ package ru.yandex.practicum.handler.sensor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.grpc.telemetry.event.ClimateSensorProto;
+import ru.yandex.practicum.grpc.telemetry.event.ClimateSensorEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.ClimateSensorAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
@@ -26,7 +26,7 @@ public class ClimateSensorEventHandler implements SensorEventHandler {
     }
 
     private SensorEventAvro toSensorEventAvro(SensorEventProto sensorEvent) {
-        ClimateSensorProto climateProto = sensorEvent.getClimateSensorEvent();
+        ClimateSensorEventProto climateProto = sensorEvent.getClimateSensorEvent();
         ClimateSensorAvro climateAvro = ClimateSensorAvro.newBuilder()
                 .setTemperatureC(climateProto.getTemperatureC())
                 .setHumidity(climateProto.getHumidity())

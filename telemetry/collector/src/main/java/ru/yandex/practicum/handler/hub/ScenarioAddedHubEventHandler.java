@@ -32,8 +32,8 @@ public class ScenarioAddedHubEventHandler implements HubEventHandler {
         ScenarioAddedEventProto scenarioProto = hubEvent.getScenarioAdded();
         ScenarioAddedEventAvro scenarioAvro = ScenarioAddedEventAvro.newBuilder()
                 .setName(scenarioProto.getName())
-                .setConditions(toScenarioConditionAvro(scenarioProto.getConditionsList()))
-                .setActions(toDeviceActionAvro(scenarioProto.getActionsList()))
+                .setConditions(toScenarioConditionAvro(scenarioProto.getConditionList()))
+                .setActions(toDeviceActionAvro(scenarioProto.getActionList()))
                 .build();
 
         return HubEventAvro.newBuilder()
