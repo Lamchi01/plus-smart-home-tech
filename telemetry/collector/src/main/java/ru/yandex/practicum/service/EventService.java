@@ -1,10 +1,10 @@
 package ru.yandex.practicum.service;
 
-import ru.yandex.practicum.model.hub.HubEvent;
-import ru.yandex.practicum.model.sensors.SensorEvent;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 
 public interface EventService {
-    void collectHubEvent(HubEvent hubEvent, String topic);
+    void collectHubEvent(HubEventAvro hubEvent);
 
-    void collectSensorEvent(SensorEvent sensorEvent, String topic);
+    void collectSensorEvent(SensorEventAvro sensorEvent);
 }
