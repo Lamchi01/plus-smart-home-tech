@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package message.event;
+package telemetry.message.event;
 
 import "google/protobuf/timestamp.proto";
 
