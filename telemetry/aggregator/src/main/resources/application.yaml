@@ -1,0 +1,16 @@
+kafka:
+  producer:
+    properties:
+      bootstrap.servers: localhost:9092
+      key.serializer: org.apache.kafka.common.serialization.StringSerializer
+      value.serializer: serializer.AvroSerializer
+  consumer:
+    properties:
+      bootstrap.servers: localhost:9092
+      key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value.deserializer: serializer.SensorAvroDeserializer
+      group.id: snapshot-aggregator
+  topics:
+    sensors-events: telemetry.sensors.v1
+    hubs-events: telemetry.hubs.v1
+    snapshots-events: telemetry.snapshots.v1

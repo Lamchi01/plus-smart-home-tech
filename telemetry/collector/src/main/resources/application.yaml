@@ -3,17 +3,7 @@ kafka:
     properties:
       bootstrap.servers: localhost:9092
       key.serializer: org.apache.kafka.common.serialization.StringSerializer
-      value.serializer: ru.yandex.practicum.kafka_client.AvroSerializer
-  consumer:
-    properties:
-      bootstrap.servers: localhost:9092
-      key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value.deserializer: ru.yandex.practicum.kafka_client.SensorAvroDeserializer
-      group.id: snapshot-aggregator
-  topics:
-    sensors-events: telemetry.sensors.v1
-    hubs-events: telemetry.hubs.v1
-    snapshots-events: telemetry.snapshots.v1
+      value.serializer: serializer.AvroSerializer
 
 grpc:
   server:
