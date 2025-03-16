@@ -19,7 +19,7 @@ public class ClientKafkaConfiguration {
     }
 
     @Bean
-    KafkaClient kafkaClient(Properties kafkaProducerConfiguration, Properties kafkaConsumerConfiguration) {
+    KafkaClient kafkaClient(Properties kafkaProducerConfiguration) {
         return new KafkaClient() {
             private Producer<String, SpecificRecordBase> producer;
 

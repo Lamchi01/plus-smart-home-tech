@@ -8,7 +8,7 @@ kafka:
     properties:
       bootstrap.servers: localhost:9092
       key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value.deserializer: serializer.SensorAvroDeserializer
+      value.deserializer: deserializer.SensorAvroDeserializer
       group.id: snapshot-aggregator
   topics:
     sensors-events: telemetry.sensors.v1
