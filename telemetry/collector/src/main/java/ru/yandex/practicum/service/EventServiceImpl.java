@@ -1,6 +1,5 @@
 package ru.yandex.practicum.service;
 
-import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -40,16 +39,5 @@ public class EventServiceImpl implements EventService {
                 sensorEvent.getHubId(),
                 sensorEvent
         ));
-    }
-
-    @PreDestroy
-    public void destroy() {
-        try {
-            kafkaClient.getProducer().flush();
-            log.info("Выполнена команда flush() в Producer");
-        } finally {
-            kafkaClient.getProducer().close();
-            log.info("Выполнена команда close() в Producer");
-        }
     }
 }
