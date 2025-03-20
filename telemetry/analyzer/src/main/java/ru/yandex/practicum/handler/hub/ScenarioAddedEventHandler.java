@@ -1,5 +1,6 @@
 package ru.yandex.practicum.handler.hub;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -33,6 +34,7 @@ public class ScenarioAddedEventHandler implements HubEventHandler {
         return ScenarioAddedEventAvro.class.getName();
     }
 
+    @Transactional
     @Override
     public void handle(HubEventAvro hubEvent) {
         ScenarioAddedEventAvro scenarioAddedEventAvro = (ScenarioAddedEventAvro) hubEvent.getPayload();
@@ -44,9 +46,7 @@ public class ScenarioAddedEventHandler implements HubEventHandler {
         List<Long> oldActionIds = null;
 
         if (scenarioOptional.isEmpty()) {
-            scenario = new Scenario();
-            scenario.setHubId(hubEvent.getHubId());
-            scenario.setName(scenarioAddedEventAvro.getName());
+            scenario = Mapper.toScenario(scenarioAddedEventAvro, hubEvent);
         } else {
             scenario = scenarioOptional.get();
             oldConditionIds = scenario.getConditions().stream().map(Condition::getId).toList();

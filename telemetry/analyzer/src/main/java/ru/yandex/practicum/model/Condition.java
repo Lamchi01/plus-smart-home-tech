@@ -29,15 +29,10 @@ public class Condition {
 
     private int value;
 
-    @ManyToMany
-    @JoinTable(
-            name = "scenario_conditions",
-            joinColumns = @JoinColumn(name = "scenario_id"),
-            inverseJoinColumns = @JoinColumn(name = "condition_id")
-    )
-    private List<Scenario> scenarios;
-
     @ManyToOne
-    @JoinColumn(name = "sensor_id", table = "scenario_conditions")
+    @JoinColumn(name = "sensor_id")
     private Sensor sensor;
+
+    @ManyToMany(mappedBy = "conditions")
+    private List<Scenario> scenarios;
 }

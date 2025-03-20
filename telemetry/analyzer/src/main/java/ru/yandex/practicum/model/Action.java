@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Entity
 @Table(name = "actions")
 @Getter
@@ -25,6 +27,9 @@ public class Action {
     private Integer value;
 
     @ManyToOne
-    @JoinColumn(name = "sensor_id", table = "scenario_actions")
+    @JoinColumn(name = "sensor_id")
     private Sensor sensor;
+
+    @ManyToMany(mappedBy = "actions")
+    private List<Scenario> scenarios;
 }

@@ -1,6 +1,8 @@
 package ru.yandex.practicum.mapper;
 
 import ru.yandex.practicum.kafka.telemetry.event.DeviceActionAvro;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.ScenarioAddedEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.ScenarioConditionAvro;
 import ru.yandex.practicum.model.*;
 
@@ -12,7 +14,7 @@ public class Mapper {
         condition.setSensor(toSensor(conditionAvro.getSensorId(), scenario.getHubId()));
         condition.setType(ConditionType.valueOf(conditionAvro.getType().name()));
         condition.setOperation(ConditionOperation.valueOf(conditionAvro.getOperation().name()));
-        condition.setValue(getSensorValue(conditionAvro.getValue()));
+        condition.setValue(getConditionValue(conditionAvro.getValue()));
         condition.setScenarios(List.of(scenario));
         return condition;
     }
@@ -25,15 +27,17 @@ public class Mapper {
         return action;
     }
 
-    private static Integer getSensorValue(Object value) {
-        if (value == null) {
+    private static Integer getConditionValue(Object conditionValue) {
+        if (conditionValue == null) {
             return null;
         }
-        return switch (value) {
-            case Integer i -> i;
-            case Boolean b -> b ? 1 : 0;
-            default -> throw new IllegalArgumentException("Неверное значение датчика");
-        };
+        if (conditionValue instanceof Boolean) {
+            return ((Boolean) conditionValue ? 1 : 0);
+        }
+        if (conditionValue instanceof Integer) {
+            return (Integer) conditionValue;
+        }
+        throw new ClassCastException("Ошибка преобразования значения условия");
     }
 
     private static Sensor toSensor(String sensorId, String hubId) {
@@ -41,5 +45,16 @@ public class Mapper {
         sensor.setId(sensorId);
         sensor.setHubId(hubId);
         return sensor;
+    }
+
+    public static Scenario toScenario(ScenarioAddedEventAvro scenarioAddedEventAvro, HubEventAvro hubEvent) {
+        Scenario scenario = new Scenario();
+        scenario.setHubId(hubEvent.getHubId());
+        scenario.setName(scenarioAddedEventAvro.getName());
+        scenario.setConditions(scenarioAddedEventAvro.getConditions().stream()
+                .map(scenarioConditionAvro -> toCondition(scenarioConditionAvro, scenario)).toList());
+        scenario.setActions(scenarioAddedEventAvro.getActions().stream()
+                .map(deviceActionAvro -> toAction(deviceActionAvro, scenario)).toList());
+        return scenario;
     }
 }

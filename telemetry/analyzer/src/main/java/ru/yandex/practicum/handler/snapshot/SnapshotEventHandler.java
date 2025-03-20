@@ -92,13 +92,32 @@ public class SnapshotEventHandler {
     }
 
     private boolean checkCondition(Condition condition, SensorStateAvro sensorStates) {
-        String type = condition.getType().name();
+        if (condition == null) {
+            log.warn("Условие не может быть null");
+            return false;
+        }
+
+        if (sensorStates == null) {
+            log.warn("State состояния датчика не может быть null");
+            return false;
+        }
+
+        if (sensorStates.getData() == null) {
+            log.warn("Data состояния датчика не может быть null");
+            return false;
+        }
+        String type = sensorStates.getData().getClass().getName();
 
         if (!sensorEventHandlers.containsKey(type)) {
             throw new IllegalArgumentException("Не могу найти обработчик для датчика " + type);
         }
 
         Integer value = sensorEventHandlers.get(type).getSensorValue(condition.getType(), sensorStates);
+
+        if (value == null) {
+            log.warn("Значение датчика не может быть null");
+            return false;
+        }
 
         return switch (condition.getOperation()) {
             case ConditionOperation.EQUALS -> value.equals(condition.getValue());

@@ -12,7 +12,6 @@ import ru.yandex.practicum.handler.snapshot.SnapshotEventHandler;
 import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
 import ru.yandex.practicum.kafka_client.KafkaClient;
 
-import java.time.Duration;
 import java.util.List;
 
 @Slf4j
@@ -30,7 +29,7 @@ public class SnapshotProcessor {
             Runtime.getRuntime().addShutdownHook(new Thread(consumer::wakeup));
             consumer.subscribe(List.of(snapshotTopic));
             while (true) {
-                ConsumerRecords<String, SensorsSnapshotAvro> records = consumer.poll(Duration.ofSeconds(10));
+                ConsumerRecords<String, SensorsSnapshotAvro> records = consumer.poll(1000);
                 for (ConsumerRecord<String, SensorsSnapshotAvro> record : records) {
                     handleRecord(record.value());
                 }
