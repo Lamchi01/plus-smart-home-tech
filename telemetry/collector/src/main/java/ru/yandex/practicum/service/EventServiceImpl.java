@@ -1,40 +1,44 @@
 package ru.yandex.practicum.service;
 
 import jakarta.annotation.PreDestroy;
-import lombok.extern.slf4j.Slf4j;
-import ru.yandex.practicum.kafka_client.KafkaClient;
 import lombok.RequiredArgsConstructor;
-import ru.yandex.practicum.mapper.EventMapper;
-import ru.yandex.practicum.model.hub.HubEvent;
-import ru.yandex.practicum.model.sensors.SensorEvent;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
+import ru.yandex.practicum.kafka_client.KafkaClient;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
     private final KafkaClient kafkaClient;
+    @Value("${kafka.topics.sensors-events}")
+    private String sensorTopic;
+    @Value("${kafka.topics.hubs-events}")
+    private String hubTopic;
 
     @Override
-    public void collectHubEvent(HubEvent hubEvent, String topic) {
+    public void collectHubEvent(HubEventAvro hubEvent) {
         kafkaClient.getProducer().send(new ProducerRecord<>(
-                topic,
+                hubTopic,
                 null,
                 hubEvent.getTimestamp().toEpochMilli(),
                 hubEvent.getHubId(),
-                EventMapper.toHubEventAvro(hubEvent)
+                hubEvent
         ));
     }
 
     @Override
-    public void collectSensorEvent(SensorEvent sensorEvent, String topic) {
+    public void collectSensorEvent(SensorEventAvro sensorEvent) {
         kafkaClient.getProducer().send(new ProducerRecord<>(
-                topic,
+                sensorTopic,
                 null,
                 sensorEvent.getTimestamp().toEpochMilli(),
                 sensorEvent.getHubId(),
-                EventMapper.toSensorEventAvro(sensorEvent)
+                sensorEvent
         ));
     }
 
@@ -42,10 +46,10 @@ public class EventServiceImpl implements EventService {
     public void destroy() {
         try {
             kafkaClient.getProducer().flush();
-            log.info("Выполнена команда flush() в Producer");
+            log.info("Выполнена команда flush() в EventService Producer");
         } finally {
             kafkaClient.getProducer().close();
-            log.info("Выполнена команда close() в Producer");
+            log.info("Выполнена команда close() в EventService Producer");
         }
     }
 }
