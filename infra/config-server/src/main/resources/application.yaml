@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          searchLocations:
+            - classpath:config/telemetry/{application}
+      fail-fast: true
+      retry:
+        use-random-policy: true
+        max-interval: 6000
+server:
+  port: 8888
