@@ -14,4 +14,9 @@ spring:
         use-random-policy: true
         max-interval: 6000
 server:
-  port: 8888
+  port: 0
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
