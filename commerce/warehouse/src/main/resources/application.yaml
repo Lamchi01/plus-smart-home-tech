@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: warehouse
+  config:
+    import: "configserver:"
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+      retry:
+        use-random-policy: true
+        max-interval: 6000
+      fail-fast: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname:localhost}:${server.instance.port:8761}/eureka
