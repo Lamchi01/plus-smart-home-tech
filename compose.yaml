@@ -36,13 +36,13 @@ services:
 
   db:
     image: postgres
-    container_name: analyzer-db
+    container_name: smart-home-db
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: analyzer
+      POSTGRES_DB: smart-home
     healthcheck:
       test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
       timeout: 5s

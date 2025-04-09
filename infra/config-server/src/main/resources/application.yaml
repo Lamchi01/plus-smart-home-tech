@@ -1,3 +1,6 @@
+server:
+  port: 8888
+
 spring:
   application:
     name: config-server
@@ -9,12 +12,11 @@ spring:
         native:
           searchLocations:
             - classpath:config/telemetry/{application}
+            - classpath:config/commerce/{application}
       fail-fast: true
       retry:
         use-random-policy: true
         max-interval: 6000
-server:
-  port: 0
 
 eureka:
   client:
