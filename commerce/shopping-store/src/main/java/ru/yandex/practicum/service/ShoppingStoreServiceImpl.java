@@ -12,7 +12,6 @@ import ru.yandex.practicum.repository.ShoppingStoreRepository;
 import ru.yandex.practicum.request.SetProductQuantityStateRequest;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,12 +59,13 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
         log.info("Процесс изменения состояния продукта: {}", request);
         Product product = findProduct(request.getProductId());
         product.setQuantityState(request.getQuantityState());
+        log.info("Product - {}", product);
         repository.save(product);
         log.info("Состояние продукта изменено: {}", product);
     }
 
     @Override
-    public Collection<ProductDto> getProducts(String category, Pageable pageable) {
+    public List<ProductDto> getProducts(String category, Pageable pageable) {
         log.info("Процесс получения продуктов по категории: {}", category);
         Sort sort = createSort(pageable.getSort());
         PageRequest pageRequest = PageRequest.of(

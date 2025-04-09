@@ -1,8 +1,9 @@
 package ru.yandex.practicum.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RestController;
+import ru.yandex.practicum.WarehouseOperations;
 import ru.yandex.practicum.model.AddressDto;
 import ru.yandex.practicum.model.BookedProductsDto;
 import ru.yandex.practicum.model.ShoppingCartDto;
@@ -10,29 +11,33 @@ import ru.yandex.practicum.request.AddProductToWarehouseRequest;
 import ru.yandex.practicum.request.NewProductInWarehouseRequest;
 import ru.yandex.practicum.service.WarehouseService;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/warehouse")
-public class WarehouseController {
+public class WarehouseController implements WarehouseOperations {
     private final WarehouseService warehouseService;
 
-    @PutMapping
-    public void addProduct(@RequestBody @Valid NewProductInWarehouseRequest request) {
+    @Override
+    public void addProduct(NewProductInWarehouseRequest request) {
+        log.info("Поступил запрос на добавление продукта в склад: {}", request);
         warehouseService.addProduct(request);
     }
 
-    @PostMapping("/check")
-    public BookedProductsDto checkProduct(@RequestBody ShoppingCartDto cart) {
+    @Override
+    public BookedProductsDto checkProduct(ShoppingCartDto cart) {
+        log.info("Поступил запрос на проверку продуктов в корзине: {}", cart);
         return warehouseService.checkProduct(cart);
     }
 
-    @PostMapping("/add")
-    public void addProductToWarehouse(@RequestBody @Valid AddProductToWarehouseRequest request) {
+    @Override
+    public void addProductToWarehouse(AddProductToWarehouseRequest request) {
+        log.info("Поступил запрос на приёмку продуктов в склад: {}", request);
         warehouseService.addProductToWarehouse(request);
     }
 
-    @GetMapping("/address")
+    @Override
     public AddressDto getAddress() {
+        log.info("Поступил запрос на получение адреса склада");
         return warehouseService.getAddress();
     }
 }

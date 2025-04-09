@@ -1,16 +1,17 @@
-package ru.yandex.practucum.service;
+package ru.yandex.practicum.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.WarehouseOperations;
+import org.springframework.transaction.annotation.Transactional;
+import ru.yandex.practicum.controller.WarehouseClient;
 import ru.yandex.practicum.exception.NotAuthorizedUserException;
+import ru.yandex.practicum.mapper.CartMapper;
+import ru.yandex.practicum.model.ShoppingCart;
 import ru.yandex.practicum.model.ShoppingCartDto;
+import ru.yandex.practicum.model.ShoppingCartState;
+import ru.yandex.practicum.repository.ShoppingCartRepository;
 import ru.yandex.practicum.request.ChangeProductQuantityRequest;
-import ru.yandex.practucum.mapper.CartMapper;
-import ru.yandex.practucum.model.ShoppingCart;
-import ru.yandex.practucum.model.ShoppingCartState;
-import ru.yandex.practucum.repository.ShoppingCartRepository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ShoppingCartRepository shoppingCartRepository;
-    private final WarehouseOperations warehouseOperations;
+    private final WarehouseClient warehouseClient;
 
     @Override
     public ShoppingCartDto getShoppingCarts(String username) {
@@ -34,7 +35,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
+    @Transactional
     public ShoppingCartDto addProductToShoppingCart(String username, Map<UUID, Integer> products) {
+        if (products == null || products.isEmpty()) {
+            throw new IllegalArgumentException("Список добавляемых продуктов не может быть пустым");
+        }
         log.info("Процесс добавления продуктов в корзину: {}", products);
         checkUser(username);
         log.info("Пользователь найден: {}", username);
@@ -44,7 +49,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         cart.setProducts(oldProducts);
         ShoppingCartDto cartDto = CartMapper.toShoppingCartDto(cart);
         log.info("Отправляю запрос на проверку наличия на складе: {}", cartDto);
-        warehouseOperations.checkProduct(cartDto);
+        warehouseClient.checkProduct(cartDto);
         log.info("Запрос на проверку наличия на складе прошёл");
         shoppingCartRepository.save(cart);
         log.info("Продукты добавлены в корзину: {}", cartDto);
@@ -74,6 +79,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
+    @Transactional
     public ShoppingCartDto changeProductQuantity(String username, ChangeProductQuantityRequest request) {
         log.info("Процесс изменения количества продукта в корзине: {}", request);
         checkUser(username);
@@ -82,7 +88,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         products.put(request.getProductId(), request.getNewQuantity());
         ShoppingCartDto cartDto = CartMapper.toShoppingCartDto(cart);
         log.info("Отправляю запрос на проверку наличия на складе: {}", cartDto);
-        warehouseOperations.checkProduct(cartDto);
+        warehouseClient.checkProduct(cartDto);
         log.info("Запрос на проверку наличия на складе прошёл");
         shoppingCartRepository.save(cart);
         log.info("Количество продукта в корзине изменено: {}", cartDto);

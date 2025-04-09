@@ -1,7 +1,7 @@
-package ru.yandex.practucum.mapper;
+package ru.yandex.practicum.mapper;
 
+import ru.yandex.practicum.model.ShoppingCart;
 import ru.yandex.practicum.model.ShoppingCartDto;
-import ru.yandex.practucum.model.ShoppingCart;
 
 public class CartMapper {
     public static ShoppingCartDto toShoppingCartDto(ShoppingCart cart) {

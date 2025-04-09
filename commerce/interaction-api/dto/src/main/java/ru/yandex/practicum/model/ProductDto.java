@@ -1,7 +1,8 @@
 package ru.yandex.practicum.model;
 
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,10 +15,10 @@ import java.util.UUID;
 public class ProductDto {
     private UUID productId;
 
-    @NotNull
+    @NotEmpty
     private String productName;
 
-    @NotNull
+    @NotEmpty
     private String description;
 
     private String imageSrc;
@@ -31,6 +32,6 @@ public class ProductDto {
     private ProductCategory productCategory;
 
     @NotNull
-    @Positive
+    @DecimalMin(value = "1")
     private Double price;
 }

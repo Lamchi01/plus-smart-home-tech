@@ -1,6 +1,6 @@
 package ru.yandex.practicum.request;
 
-import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +16,6 @@ public class AddProductToWarehouseRequest {
     private UUID productId;
 
     @NotNull
-    @DecimalMin(value = "1")
+    @Min(value = 1)
     private Integer quantity;
 }

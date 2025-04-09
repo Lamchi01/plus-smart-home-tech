@@ -1,4 +1,4 @@
-package ru.yandex.practucum.error;
+package ru.yandex.practicum.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;

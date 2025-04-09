@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.yandex.practicum.ShoppingStoreOperations;
+import ru.yandex.practicum.controller.ShoppingStoreClient;
 import ru.yandex.practicum.exception.NoSpecifiedProductInWarehouseException;
 import ru.yandex.practicum.exception.ProductInShoppingCartLowQuantityInWarehouse;
 import ru.yandex.practicum.exception.SpecifiedProductAlreadyInWarehouseException;
@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseRepository warehouseRepository;
-    private final ShoppingStoreOperations shoppingStoreOperations;
+    private final ShoppingStoreClient shoppingStoreClient;
     private static final AddressDto[] ADDRESSES =
             new AddressDto[]{
                     new AddressDto("ADDRESS_1",
@@ -44,18 +44,16 @@ public class WarehouseServiceImpl implements WarehouseService {
     private static final AddressDto CURRENT_ADDRESS =
             ADDRESSES[Random.from(new SecureRandom()).nextInt(0, 1)];
 
-    @Transactional
     @Override
     public void addProduct(NewProductInWarehouseRequest request) {
         log.info("Процесс добавления продукта в склад: {}", request);
         checkProductInWarehouse(request.getProductId());
         WarehouseProduct product = WarehouseMapper.toWarehouseProduct(request);
-        product.setQuantity(1000);
+        product.setQuantity(0);
         warehouseRepository.save(product);
         log.info("Продукт добавлен в склад: {}", product);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public BookedProductsDto checkProduct(ShoppingCartDto cart) {
         log.info("Процесс проверки продуктов в корзине: {}", cart);
@@ -67,8 +65,8 @@ public class WarehouseServiceImpl implements WarehouseService {
         return calculateDeliveryParams(warehouseProducts);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void addProductToWarehouse(AddProductToWarehouseRequest request) {
         log.info("Процесс приёмки товара: {}", request);
         WarehouseProduct product = getWarehouseProduct(request.getProductId());
@@ -137,7 +135,7 @@ public class WarehouseServiceImpl implements WarehouseService {
             quantityState = QuantityState.MANY;
         }
         try {
-            shoppingStoreOperations.setProductState(new SetProductQuantityStateRequest(product.getProductId(), quantityState));
+            shoppingStoreClient.setProductState(new SetProductQuantityStateRequest(product.getProductId(), quantityState));
         } catch (FeignException e) {
             log.error("Процесс изменения состояния продукта в магазине завершен с ошибкой: {}", e.getMessage());
         }
