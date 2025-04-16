@@ -13,6 +13,7 @@ spring:
           searchLocations:
             - classpath:config/telemetry/{application}
             - classpath:config/commerce/{application}
+            - classpath:config/infra/{application}
       fail-fast: true
       retry:
         use-random-policy: true
