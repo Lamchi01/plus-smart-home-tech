@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public interface ShoppingCartOperation {
+public interface ShoppingCartOperations {
     @GetMapping("/api/v1/shopping-cart")
     ShoppingCartDto getShoppingCarts(@RequestParam String username);
 

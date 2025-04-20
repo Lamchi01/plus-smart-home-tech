@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.yandex.practicum.ShoppingCartOperation;
+import ru.yandex.practicum.ShoppingCartOperations;
 import ru.yandex.practicum.model.ShoppingCartDto;
 import ru.yandex.practicum.request.ChangeProductQuantityRequest;
 import ru.yandex.practicum.service.ShoppingCartService;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class ShoppingCartController implements ShoppingCartOperation {
+public class ShoppingCartController implements ShoppingCartOperations {
     private final ShoppingCartService shoppingCartService;
 
     @Override
