@@ -30,12 +30,14 @@ public class WarehouseController implements WarehouseOperations {
 
     @Override
     public void shipped(ShippedToDeliveryRequest request) {
-
+        log.info("Поступил запрос на отгрузку продуктов: {}", request);
+        warehouseService.shipped(request);
     }
 
     @Override
     public void returnProduct(Map<UUID, Integer> products) {
-
+        log.info("Поступил запрос на возврат продуктов: {}", products);
+        warehouseService.returnProduct(products);
     }
 
     @Override
@@ -46,7 +48,8 @@ public class WarehouseController implements WarehouseOperations {
 
     @Override
     public BookedProductsDto assembleProduct(AssemblyProductsForOrderRequest request) {
-        return null;
+        log.info("Поступил запрос на сборку продуктов: {}", request);
+        return warehouseService.assembleProduct(request);
     }
 
     @Override

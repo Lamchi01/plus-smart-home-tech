@@ -17,6 +17,7 @@ import ru.yandex.practicum.repository.BookingRepository;
 import ru.yandex.practicum.repository.WarehouseRepository;
 import ru.yandex.practicum.request.*;
 
+import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Map;
@@ -94,18 +95,15 @@ public class WarehouseServiceImpl implements WarehouseService {
                 () -> warehouseRepository.findAllById(products.keySet()).stream();
         try {
             checkQuantityInWarehouse(warehouseProducts.get(), products);
-
         } catch (ProductInShoppingCartLowQuantityInWarehouse e) {
             orderClient.assemblyFailed(request.getOrderId());
             throw e;
         }
 
-        orderClient.assembly(request.getOrderId());
-
         BookedProductsDto dto = calculateDeliveryParams(warehouseProducts);
         processBookingInWarehouse(products);
         Booking booking = BookingMapper.toBooking(dto, request);
-        bookingRepository.save(booking);
+        booking = bookingRepository.save(booking);
         log.info("Продукты забронированы для отгрузки: {}", booking);
         return BookingMapper.toBookedProductsDto(booking);
     }
@@ -134,13 +132,15 @@ public class WarehouseServiceImpl implements WarehouseService {
         dto.setDeliveryWeight(
                 warehouseProducts.get()
                         .map(WarehouseProduct::getWeight)
-                        .reduce(0.0, Double::sum)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
 
         dto.setDeliveryVolume(
                 warehouseProducts.get()
-                        .map(product -> product.getWidth() * product.getHeight() * product.getDepth())
-                        .reduce(0.0, Double::sum));
+                        .map(product ->
+                                product.getWidth().multiply(product.getHeight()).multiply(product.getDepth()))
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
 
         dto.setFragile(
                 warehouseProducts.get().anyMatch(WarehouseProduct::getFragile));

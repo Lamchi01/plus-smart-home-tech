@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.UUID;
 
@@ -26,15 +27,15 @@ public class OrderDto {
 
     private OrderState state;
 
-    private Double deliveryWeight;
+    private BigDecimal deliveryWeight;
 
-    private Double deliveryVolume;
+    private BigDecimal deliveryVolume;
 
     private Boolean fragile;
 
-    private Double totalPrice;
+    private BigDecimal totalPrice;
 
-    private Double deliveryPrice;
+    private BigDecimal deliveryPrice;
 
-    private Double productPrice;
+    private BigDecimal productPrice;
 }

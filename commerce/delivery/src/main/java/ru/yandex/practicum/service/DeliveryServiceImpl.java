@@ -12,6 +12,7 @@ import ru.yandex.practicum.model.*;
 import ru.yandex.practicum.repository.DeliveryRepository;
 import ru.yandex.practicum.request.ShippedToDeliveryRequest;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Slf4j
@@ -22,13 +23,13 @@ public class DeliveryServiceImpl implements DeliveryService {
     private final OrderClient orderClient;
     private final WarehouseClient warehouseClient;
 
-    private static final double BASE_RATE = 5.0;
-    private static final double WAREHOUSE_1_ADDRESS_MULTIPLIER = 1.0;
-    private static final double WAREHOUSE_2_ADDRESS_MULTIPLIER = 2.0;
-    private static final double FRAGILE_MULTIPLIER = 0.2;
-    private static final double WEIGHT_MULTIPLIER = 0.3;
-    private static final double VOLUME_MULTIPLIER = 0.2;
-    private static final double STREET_MULTIPLIER = 0.2;
+    private static final BigDecimal BASE_RATE = BigDecimal.valueOf(5);
+    private static final BigDecimal WAREHOUSE_1_ADDRESS_MULTIPLIER = BigDecimal.valueOf(1.0);
+    private static final BigDecimal WAREHOUSE_2_ADDRESS_MULTIPLIER = BigDecimal.valueOf(2.0);
+    private static final BigDecimal FRAGILE_MULTIPLIER = BigDecimal.valueOf(0.2);
+    private static final BigDecimal WEIGHT_MULTIPLIER = BigDecimal.valueOf(0.3);
+    private static final BigDecimal VOLUME_MULTIPLIER = BigDecimal.valueOf(0.2);
+    private static final BigDecimal STREET_MULTIPLIER = BigDecimal.valueOf(0.2);
 
     @Override
     public DeliveryDto planDelivery(DeliveryDto deliveryDto) {
@@ -70,24 +71,30 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public Double calculateDeliveryCost(OrderDto orderDto) {
+    public BigDecimal calculateDeliveryCost(OrderDto orderDto) {
         Delivery delivery = getDelivery(orderDto.getDeliveryId());
         Address warehouseAddress = delivery.getFromAddress();
         Address customerAddress = delivery.getToAddress();
 
-        double totalCost = BASE_RATE;
+        BigDecimal totalCost = BASE_RATE;
 
-        totalCost += warehouseAddress.getCity().equals("ADDRESS_1")
-                ? totalCost * WAREHOUSE_1_ADDRESS_MULTIPLIER : totalCost * WAREHOUSE_2_ADDRESS_MULTIPLIER;
+        BigDecimal warehouseMultiplier = warehouseAddress.getCity().equals("ADDRESS_1")
+                ? WAREHOUSE_1_ADDRESS_MULTIPLIER : WAREHOUSE_2_ADDRESS_MULTIPLIER;
+        totalCost = totalCost.add(totalCost.multiply(warehouseMultiplier));
 
-        totalCost += orderDto.getFragile() ? totalCost * FRAGILE_MULTIPLIER : 0;
+        if (orderDto.getFragile()) {
+            totalCost = totalCost.add(totalCost.multiply(FRAGILE_MULTIPLIER));
+        }
 
-        totalCost += orderDto.getDeliveryWeight() * WEIGHT_MULTIPLIER;
+        BigDecimal weight = orderDto.getDeliveryWeight().multiply(WEIGHT_MULTIPLIER);
+        totalCost = totalCost.add(weight);
 
-        totalCost += orderDto.getDeliveryVolume() * VOLUME_MULTIPLIER;
+        BigDecimal volume = orderDto.getDeliveryVolume().multiply(VOLUME_MULTIPLIER);
+        totalCost = totalCost.add(volume);
 
-        totalCost += warehouseAddress.getStreet().equals(customerAddress.getStreet())
-                ? 0 : totalCost * STREET_MULTIPLIER;
+        if (!warehouseAddress.getCity().equals(customerAddress.getCity())) {
+            totalCost = totalCost.add(totalCost.multiply(STREET_MULTIPLIER));
+        }
 
         log.info("Расчет стоимости доставки: {}", totalCost);
         return totalCost;

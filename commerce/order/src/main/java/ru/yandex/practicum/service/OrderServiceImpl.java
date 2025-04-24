@@ -16,6 +16,7 @@ import ru.yandex.practicum.request.AssemblyProductsForOrderRequest;
 import ru.yandex.practicum.request.CreateNewOrderRequest;
 import ru.yandex.practicum.request.ProductReturnRequest;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -118,7 +119,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderDto calculateTotalCost(UUID orderId) {
         Order order = getOrder(orderId);
-        double totalPrice = paymentClient.totalCost(OrderMapper.toOrderDto(order));
+        BigDecimal totalPrice = paymentClient.totalCost(OrderMapper.toOrderDto(order));
         order.setTotalPrice(totalPrice);
         orderRepository.save(order);
         log.info("Стоимость заказа: {}", order);
@@ -129,7 +130,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderDto calculateDeliveryCost(UUID orderId) {
         Order order = getOrder(orderId);
-        double deliveryPrice = deliveryClient.calculateDeliveryCost(OrderMapper.toOrderDto(order));
+        BigDecimal deliveryPrice = deliveryClient.calculateDeliveryCost(OrderMapper.toOrderDto(order));
         order.setDeliveryPrice(deliveryPrice);
         orderRepository.save(order);
         log.info("Стоимость доставки заказа: {}", order);

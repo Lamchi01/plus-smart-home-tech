@@ -9,5 +9,6 @@ import ru.yandex.practicum.model.ShoppingCartDto;
 @NoArgsConstructor
 public class CreateNewOrderRequest {
     ShoppingCartDto shoppingCart;
+
     AddressDto deliveryAddress;
 }

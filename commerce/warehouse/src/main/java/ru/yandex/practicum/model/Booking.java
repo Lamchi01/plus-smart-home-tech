@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.UUID;
 
@@ -21,9 +22,9 @@ public class Booking {
 
     private Boolean fragile;
 
-    private Double deliveryVolume;
+    private BigDecimal deliveryVolume;
 
-    private Double deliveryWeight;
+    private BigDecimal deliveryWeight;
 
     @ElementCollection
     @CollectionTable(

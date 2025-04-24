@@ -12,6 +12,7 @@ import ru.yandex.practicum.mapper.PaymentMapper;
 import ru.yandex.practicum.model.*;
 import ru.yandex.practicum.repository.PaymentRepository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final ShoppingStoreClient shoppingStoreClient;
     private final OrderClient orderClient;
-    private static final double NDS = 0.1;
+    private static final BigDecimal NDS = BigDecimal.valueOf(0.1);
 
     @Override
     @Transactional
@@ -38,17 +39,17 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional
-    public Double totalCost(OrderDto order) {
-        List<Double> prices = new ArrayList<>();
+    public BigDecimal totalCost(OrderDto order) {
+        List<BigDecimal> prices = new ArrayList<>();
         Map<UUID, Integer> orderProducts = order.getProducts();
 
         orderProducts.forEach((id, quantity) -> {
             ProductDto productDto = shoppingStoreClient.getProductById(id);
-            double totalPrice = productDto.getPrice() * quantity;
+            BigDecimal totalPrice = productDto.getPrice().multiply(BigDecimal.valueOf(quantity));
             prices.add(totalPrice);
         });
 
-        double totalCost = prices.stream().mapToDouble(Double::doubleValue).sum();
+        BigDecimal totalCost = prices.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
         log.info("Общая стоимость заказа: {}", totalCost);
         return totalCost;
     }
@@ -64,11 +65,11 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Double productCost(OrderDto order) {
+    public BigDecimal productCost(OrderDto order) {
         validPrice(List.of(order.getTotalPrice(), order.getDeliveryPrice(), order.getProductPrice()));
-        double productCost = order.getProductPrice();
-        double deliveryCost = order.getDeliveryPrice();
-        double totalCost = deliveryCost + productCost + (productCost * NDS);
+        BigDecimal productCost = order.getProductPrice();
+        BigDecimal deliveryCost = order.getDeliveryPrice();
+        BigDecimal totalCost = deliveryCost.add(productCost).add(productCost.multiply(NDS));
         log.info("Общая стоимость продуктов: {}", totalCost);
         return totalCost;
     }
@@ -91,9 +92,9 @@ public class PaymentServiceImpl implements PaymentService {
                 });
     }
 
-    private void validPrice(List<Double> prices) {
-        for (Double price : prices) {
-            if (price == null || price < 0) {
+    private void validPrice(List<BigDecimal> prices) {
+        for (BigDecimal price : prices) {
+            if (price == null || price.compareTo(BigDecimal.ZERO) < 0) {
                 throw new NotEnoughInfoInOrderToCalculateException("Недостаточно информации для формирования платежа");
             }
         }

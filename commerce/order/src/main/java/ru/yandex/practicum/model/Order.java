@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.UUID;
 
@@ -39,15 +40,15 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderState state;
 
-    private Double deliveryWeight;
+    private BigDecimal deliveryWeight;
 
-    private Double deliveryVolume;
+    private BigDecimal deliveryVolume;
 
     private Boolean fragile;
 
-    private Double totalPrice;
+    private BigDecimal totalPrice;
 
-    private Double deliveryPrice;
+    private BigDecimal deliveryPrice;
 
-    private Double productPrice;
+    private BigDecimal productPrice;
 }

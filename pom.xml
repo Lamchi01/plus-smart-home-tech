@@ -19,7 +19,6 @@
         <module>telemetry</module>
         <module>infra</module>
         <module>commerce</module>
-        <module>commerce/order</module>
     </modules>
 
     <properties>

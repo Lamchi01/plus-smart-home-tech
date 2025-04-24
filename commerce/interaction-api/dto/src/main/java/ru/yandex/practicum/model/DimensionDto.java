@@ -6,19 +6,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class DimensionDto {
     @NotNull
     @Min(value = 1)
-    private Double width;
+    private BigDecimal width;
 
     @NotNull
     @Min(value = 1)
-    private Double height;
+    private BigDecimal height;
 
     @NotNull
     @Min(value = 1)
-    private Double depth;
+    private BigDecimal depth;
 }

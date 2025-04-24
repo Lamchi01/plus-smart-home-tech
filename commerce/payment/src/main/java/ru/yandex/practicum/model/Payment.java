@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -20,11 +21,11 @@ public class Payment {
 
     private UUID orderId;
 
-    private Double totalPayment;
+    private BigDecimal totalPayment;
 
-    private Double deliveryTotal;
+    private BigDecimal deliveryTotal;
 
-    private Double feeTotal;
+    private BigDecimal feeTotal;
 
     @Enumerated(EnumType.STRING)
     private PaymentState paymentState;
