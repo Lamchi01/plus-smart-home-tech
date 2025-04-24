@@ -8,8 +8,13 @@ import ru.yandex.practicum.model.AddressDto;
 import ru.yandex.practicum.model.BookedProductsDto;
 import ru.yandex.practicum.model.ShoppingCartDto;
 import ru.yandex.practicum.request.AddProductToWarehouseRequest;
+import ru.yandex.practicum.request.AssemblyProductsForOrderRequest;
 import ru.yandex.practicum.request.NewProductInWarehouseRequest;
+import ru.yandex.practicum.request.ShippedToDeliveryRequest;
 import ru.yandex.practicum.service.WarehouseService;
+
+import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -24,9 +29,27 @@ public class WarehouseController implements WarehouseOperations {
     }
 
     @Override
+    public void shipped(ShippedToDeliveryRequest request) {
+        log.info("Поступил запрос на отгрузку продуктов: {}", request);
+        warehouseService.shipped(request);
+    }
+
+    @Override
+    public void returnProduct(Map<UUID, Integer> products) {
+        log.info("Поступил запрос на возврат продуктов: {}", products);
+        warehouseService.returnProduct(products);
+    }
+
+    @Override
     public BookedProductsDto checkProduct(ShoppingCartDto cart) {
         log.info("Поступил запрос на проверку продуктов в корзине: {}", cart);
         return warehouseService.checkProduct(cart);
+    }
+
+    @Override
+    public BookedProductsDto assembleProduct(AssemblyProductsForOrderRequest request) {
+        log.info("Поступил запрос на сборку продуктов: {}", request);
+        return warehouseService.assembleProduct(request);
     }
 
     @Override
