@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -20,13 +21,13 @@ public class WarehouseProduct {
 
     private Boolean fragile;
 
-    private Double width;
+    private BigDecimal width;
 
-    private Double height;
+    private BigDecimal height;
 
-    private Double depth;
+    private BigDecimal depth;
 
-    private Double weight;
+    private BigDecimal weight;
 
     private Integer quantity;
 }
